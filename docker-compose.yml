@@ -1,5 +1,3 @@
-version: "3.9"
-
 networks:
   health-network:
     driver: bridge
@@ -12,7 +10,7 @@ services:
     depends_on:
       - user-service
       - activity-service
-      - health-metric-service
+      - health-metrics-service
       - progress-service
     networks:
       - health-network
@@ -31,8 +29,8 @@ services:
     networks:
       - health-network
 
-  health-metric-service:
-    build: ./services/health-metric-service
+  health-metrics-service:
+    build: ./services/health-metrics-service
     ports:
       - "4003:4003"
     networks:

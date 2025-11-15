@@ -20,7 +20,7 @@ export const setupRoutes = (app) => {
   app.use(
     "/metrics",
     createProxyMiddleware({
-      target: "http://health-metric-service:4003",
+      target: "http://health-metrics-service:4003",
       changeOrigin: true,
     })
   );

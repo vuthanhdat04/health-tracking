@@ -55,7 +55,6 @@ docker-compose.override.yml
 docker-compose.dev.yml
 
 # Skip compiled containers
-**/Dockerfile*
 
 # =========================
 # Microservices
