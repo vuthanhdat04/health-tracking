@@ -1,0 +1,46 @@
+version: "3.9"
+
+networks:
+  health-network:
+    driver: bridge
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - user-service
+      - activity-service
+      - health-metric-service
+      - progress-service
+    networks:
+      - health-network
+
+  user-service:
+    build: ./services/user-service
+    ports:
+      - "4001:4001"
+    networks:
+      - health-network
+
+  activity-service:
+    build: ./services/activity-service
+    ports:
+      - "4002:4002"
+    networks:
+      - health-network
+
+  health-metric-service:
+    build: ./services/health-metric-service
+    ports:
+      - "4003:4003"
+    networks:
+      - health-network
+
+  progress-service:
+    build: ./services/progress-service
+    ports:
+      - "4004:4004"
+    networks:
+      - health-network
