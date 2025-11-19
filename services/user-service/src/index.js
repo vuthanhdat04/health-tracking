@@ -1,23 +1,27 @@
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
-import userRoutes from "./routes/user.route.js";
+import authRoutes from "./routes/auth.routes.js";
+import { auth } from "./middleware/auth.middleware.js";
+import { connectDB, sequelize } from "./config/db.js";
 
 dotenv.config();
-const app = express();
 
-app.use(cors());
+const app = express();
 app.use(express.json());
 
-// Health check
-app.get("/", (req, res) => {
-  res.json({ message: "User Service is running" });
+// Kết nối DB
+await connectDB();
+
+// Sync bảng (tự tạo nếu chưa có)
+await sequelize.sync();
+
+app.use("/auth", authRoutes);
+
+// Protected route test
+app.get("/auth/profile", auth, (req, res) => {
+  res.json({ userId: req.userId });
 });
 
-// User routes
-app.use("/users", userRoutes);
-
-const PORT = process.env.PORT || 4001;
-app.listen(PORT, () => {
-  console.log(`🟦 User Service running on port ${PORT}`);
+app.listen(4001, () => {
+  console.log("User Service running on port 4001");
 });
