@@ -29,6 +29,15 @@ export const User = sequelize.define("User",
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
+  resetOtp: {
+  type: DataTypes.STRING,
+  allowNull: true,
+  },
+  resetOtpExp: {
+  type: DataTypes.DATE,
+  allowNull: true,
+  },
+
 },
   {
     tableName: "users",   // 👈 BẮT BUỘC
