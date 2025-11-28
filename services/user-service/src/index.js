@@ -8,6 +8,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Kết nối DB
 await connectDB();
@@ -15,10 +16,10 @@ await connectDB();
 // Sync bảng (tự tạo nếu chưa có)
 await sequelize.sync();
 
-app.use("/auth", authRoutes);
+app.use("/users", authRoutes);
 
 // Protected route test
-app.get("/auth/profile", auth, (req, res) => {
+app.get("/users/profile", auth, (req, res) => {
   res.json({ userId: req.userId });
 });
 

@@ -13,12 +13,30 @@ export default function Register() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  const validateForm = () => {
+    if (!form.name.trim()) return "Tên không được để trống";
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) return "Email không hợp lệ";
+
+    if (form.password.length < 6) return "Mật khẩu phải ít nhất 6 ký tự";
+
+    return null;
+  };
+
   const handleSubmit = async () => {
     setErrMsg("");
+
+    const msg = validateForm();
+    if (msg) {
+      setErrMsg(msg);
+      return;
+    }
+
     try {
       await register(form);
       alert("Đăng ký thành công! Hãy đăng nhập.");
-      navigate("/login");
+      navigate(`/verify-otp?email=${form.email}`);
     } catch (err) {
       setErrMsg(err.response?.data?.message || "Register thất bại");
     }
@@ -29,9 +47,7 @@ export default function Register() {
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Tạo tài khoản mới</h2>
 
-        {errMsg && (
-          <p className="mb-3 text-red-500 text-sm">{errMsg}</p>
-        )}
+        {errMsg && <p className="mb-3 text-red-500 text-sm">{errMsg}</p>}
 
         <input
           name="name"

@@ -1,9 +1,9 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { loginUser, registerUser } from "../services/authService";
 
 const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +16,6 @@ export function AuthProvider({ children }) {
 
   const login = async (form) => {
     const data = await loginUser(form);
-    // backend bạn đang trả { message, token }
     localStorage.setItem("token", data.token);
     setToken(data.token);
     return data;
@@ -32,16 +31,27 @@ export function AuthProvider({ children }) {
     setToken(null);
   };
 
-  const value = {
-    token,
-    isAuthenticated: !!token,
-    login,
-    register,
-    logout,
-    loading,
-  };
+  // 🟢 useMemo để tránh HMR bị invalid
+  const value = useMemo(
+    () => ({
+      token,
+      isAuthenticated: !!token,
+      login,
+      register,
+      logout,
+      loading,
+    }),
+    [token, loading]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+};
 
-export const useAuth = () => useContext(AuthContext);
+// 🟢 Hook export riêng, không chung file default => ổn định HMR
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used inside <AuthProvider>");
+  }
+  return ctx;
+};

@@ -7,6 +7,8 @@ import NotFound from "../pages/not-found/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 import { AuthProvider } from "../context/authContext";
 import Dashboard from "../components/dashboard/Dashboard";
+import VerifyOtp from "../pages/verify-otp/VerifyOtp";
+import ForgotPassword from "../pages/forgot-password/ForgotPassword";
 
 export default function AppRouter() {
   return (
@@ -15,6 +17,8 @@ export default function AppRouter() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* route cần đăng nhập */}
         <Route

@@ -14,11 +14,14 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async () => {
+    console.log("🔵 handleSubmit CALLED");   // THÊM DÒNG NÀY
     setErrMsg("");
     try {
       await login(form);
+      console.log("✔️ LOGIN SUCCESS");      // THÊM
       navigate("/dashboard");
     } catch (err) {
+      console.error("❌ LOGIN FAILED", err);
       setErrMsg(err.response?.data?.message || "Login thất bại");
     }
   };
@@ -27,10 +30,12 @@ export default function Login() {
     <AuthLayout>
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Đăng nhập</h2>
+        
 
         {errMsg && (
           <p className="mb-3 text-red-500 text-sm">{errMsg}</p>
         )}
+
 
         <input
           name="email"
@@ -55,7 +60,7 @@ export default function Login() {
           Đăng nhập
         </button>
 
-        <p className="text-center">
+        <div className="text-center">
           Chưa có tài khoản?
           <span
             onClick={() => navigate("/register")}
@@ -63,7 +68,14 @@ export default function Login() {
           >
             Đăng ký
           </span>
-        </p>
+          <p
+            className="text-green-600 cursor-pointer text-center mt-2"
+            onClick={() => navigate("/forgot-password")}
+          >
+            Quên mật khẩu?
+          </p>
+
+        </div>
       </div>
     </AuthLayout>
   );
