@@ -1,8 +1,10 @@
-import { Router } from "express";
-import { getUserProgress } from "../controllers/progress.controller.js";
+// src/routes/progress.routes.js
+const express = require("express");
+const progressController = require("../controllers/progress.controller");
 
-const router = Router();
+const router = express.Router();
 
-router.get("/:userId", getUserProgress);
+router.get("/daily", progressController.getDailyProgress);
+router.get("/weekly", progressController.getWeeklyProgress);
 
-export default router;
+module.exports = router;

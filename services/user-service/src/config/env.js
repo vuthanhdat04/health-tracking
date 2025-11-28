@@ -1,4 +1,13 @@
-import dotenv from "dotenv";
+// src/config/env.js
+const dotenv = require("dotenv");
+
 dotenv.config();
 
-export const PORT = process.env.PORT || 4001;
+const env = {
+  nodeEnv: process.env.NODE_ENV || "development",
+  port: process.env.PORT || 4001,
+  dbUri: process.env.DB_URI,
+  jwtSecret: process.env.JWT_SECRET || "superSecretKey123",
+};
+
+module.exports = env;

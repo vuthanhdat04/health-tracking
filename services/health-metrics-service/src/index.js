@@ -1,24 +1,39 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import metricRoutes from "./routes/metric.routes.js";
+// src/index.js
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const morgan = require("morgan");
 
-dotenv.config();
+const env = require("./config/env");
+const metricRoutes = require("./routes/metric.routes");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(morgan("dev"));
 
-// Health check
-app.get("/", (req, res) => {
-  res.json({ message: "Health Metric Service is running" });
+app.use("/api/metrics", metricRoutes);
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", service: "health-metrics-service" });
 });
 
-// Routes
-app.use("/metrics", metricRoutes);
+const start = async () => {
+  try {
+    console.log("[health-metrics-service] Connecting to DB:", env.dbUri);
+    await mongoose.connect(env.dbUri, {
+      serverSelectionTimeoutMS: 5000,
+    });
+    console.log("[health-metrics-service] Connected to DB");
 
-const PORT = process.env.PORT || 4003;
-app.listen(PORT, () => {
-  console.log(`💙 Health Metric Service running on port ${PORT}`);
-});
+    app.listen(env.port, () => {
+      console.log(`[health-metrics-service] running on port ${env.port}`);
+    });
+  } catch (err) {
+    console.error("[health-metrics-service] Failed to start", err);
+    process.exit(1);
+  }
+};
+
+start();

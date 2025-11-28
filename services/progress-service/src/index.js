@@ -1,16 +1,37 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import progressRoutes from "./routes/progress.routes.js";
+// src/index.js
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const morgan = require("morgan");
 
-dotenv.config();
+const env = require("./config/env");
+const progressRoutes = require("./routes/progress.routes");
+
 const app = express();
+
 app.use(cors());
 app.use(express.json());
+app.use(morgan("dev"));
 
-app.get("/", (req, res) => res.json({ message: "Progress Service running" }));
+app.use("/api/progress", progressRoutes);
 
-app.use("/progress", progressRoutes);
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", service: "progress-service" });
+});
 
-const PORT = process.env.PORT || 4004;
-app.listen(PORT, () => console.log(`📊 Progress Service on ${PORT}`));
+const start = async () => {
+  try {
+    console.log("[progress-service] Connecting to DB:", env.dbUri);
+    await mongoose.connect(env.dbUri, { serverSelectionTimeoutMS: 5000 });
+    console.log("[progress-service] Connected to DB");
+
+    app.listen(env.port, () => {
+      console.log(`[progress-service] running on port ${env.port}`);
+    });
+  } catch (err) {
+    console.error("[progress-service] Failed to start", err);
+    process.exit(1);
+  }
+};
+
+start();

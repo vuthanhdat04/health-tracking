@@ -1,9 +1,17 @@
-import { Router } from "express";
-import { registerUser, getUser } from "../controllers/user.controller.js";
+// src/routes/user.route.js
+const express = require("express");
+const userController = require("../controllers/user.controller");
+const { authMiddleware } = require("../utils/auth.middleware");
 
-const router = Router();
+const router = express.Router();
 
-router.post("/register", registerUser);
-router.get("/:id", getUser);
+// Đăng ký
+router.post("/register", userController.register);
 
-export default router;
+// Đăng nhập
+router.post("/login", userController.login);
+
+// Lấy profile (cần Bearer token)
+router.get("/me", authMiddleware, userController.getProfile);
+
+module.exports = router;

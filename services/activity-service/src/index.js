@@ -1,24 +1,41 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import activityRoutes from "./routes/activity.routes.js";
+// src/index.js
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const morgan = require("morgan");
 
-dotenv.config();
+const env = require("./config/env");
+const activityRoutes = require("./routes/activity.routes");
 
 const app = express();
 
+// ----- middlewares -----
 app.use(cors());
 app.use(express.json());
+app.use(morgan("dev"));
 
-// Health check
-app.get("/", (req, res) => {
-  res.json({ message: "Activity Service is running" });
+// ----- routes -----
+app.use("/api/activities", activityRoutes);
+
+// endpoint kiểm tra service sống
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", service: "activity-service" });
 });
 
-// Main routes
-app.use("/activities", activityRoutes);
+// ----- start server -----
+const start = async () => {
+  try {
+    console.log("[activity-service] Connecting to DB:", env.dbUri);
+    await mongoose.connect(env.dbUri);
+    console.log("[activity-service] Connected to DB");
 
-const PORT = process.env.PORT || 4002;
-app.listen(PORT, () => {
-  console.log(`🚀 Activity Service running on port ${PORT}`);
-});
+    app.listen(env.port, () => {
+      console.log(`[activity-service] running on port ${env.port}`);
+    });
+  } catch (err) {
+    console.error("[activity-service] Failed to start", err);
+    process.exit(1);
+  }
+};
+
+start();

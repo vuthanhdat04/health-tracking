@@ -1,10 +1,27 @@
-export const success = (message, data) => ({
-  status: "success",
-  message,
-  data,
-});
+// src/utils/response.js
 
-export const error = (message) => ({
-  status: "error",
-  message,
-});
+const successResponse = (res, data = null, message = "Success", statusCode = 200) => {
+  return res.status(statusCode).json({
+    success: true,
+    message,
+    data,
+  });
+};
+
+const errorResponse = (
+  res,
+  message = "Internal server error",
+  statusCode = 500,
+  errors = null
+) => {
+  return res.status(statusCode).json({
+    success: false,
+    message,
+    errors,
+  });
+};
+
+module.exports = {
+  successResponse,
+  errorResponse,
+};

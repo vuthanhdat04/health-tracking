@@ -1,21 +1,23 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import { setupRoutes } from "./routes.js";
+// src/index.js
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const env = require("./config/env");
+const apiRoutes = require("./routes");
 
-dotenv.config();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(morgan("dev"));
 
-app.get("/", (req, res) => {
-  res.json({ message: "API Gateway is running" });
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", service: "api-gateway" });
 });
 
-setupRoutes(app);
+// Tất cả API đều đi qua /api
+app.use("/api", apiRoutes);
 
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`🌐 API Gateway running on port ${PORT}`);
+app.listen(env.port, () => {
+  console.log(`[api-gateway] running on port ${env.port}`);
 });

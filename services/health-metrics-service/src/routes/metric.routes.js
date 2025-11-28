@@ -1,8 +1,11 @@
-import { Router } from "express";
-import { createMetric } from "../controllers/metric.controller.js";
+// src/routes/metric.routes.js
+const express = require("express");
+const metricController = require("../controllers/metric.controller");
 
-const router = Router();
+const router = express.Router();
 
-router.post("/", createMetric);
+router.post("/", metricController.createMetric);
+router.get("/", metricController.getMetrics);
+router.get("/latest", metricController.getLatestMetric);
 
-export default router;
+module.exports = router;
