@@ -1,42 +1,213 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* src/App.css */
+
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f5f7fb;
+  color: #222;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.app-header {
+  padding: 1rem 2rem;
+  background: #1e40af;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.35);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.tab-nav {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: #e5e7eb;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.tab-nav button {
+  border: none;
+  background: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+
+.tab-nav button:hover {
+  background: rgba(30, 64, 175, 0.08);
+  transform: translateY(-1px);
+}
+
+.tab-nav button.active {
+  background: #1e40af;
+  color: #fff;
+}
+
+.app-main {
+  flex: 1;
+  padding: 1.5rem 2rem 2.5rem;
+  display: flex;
+  justify-content: center;
 }
 
 .card {
-  padding: 2em;
+  width: 100%;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem 1.75rem 2rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
 }
 
-.read-the-docs {
-  color: #888;
+.card h2 {
+  margin-top: 0;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.form input,
+.form select {
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+.form input:focus,
+.form select:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35);
+}
+
+button {
+  border-radius: 999px;
+  border: none;
+  padding: 0.6rem 1.1rem;
+  background: #1e40af;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  align-self: flex-start;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+button:hover {
+  background: #1d4ed8;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+button.secondary {
+  background: #eef2ff;
+  color: #1e40af;
+  border: 1px solid #c7d2fe;
+}
+
+button.secondary:hover {
+  background: #e0e7ff;
+  box-shadow: none;
+}
+
+button.small {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.list-item {
+  padding: 0.6rem 0.4rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-main {
+  font-size: 0.95rem;
+}
+
+.list-sub {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.metric-card {
+  margin-top: 0.5rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.75rem;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  font-size: 0.9rem;
+}
+
+.toast {
+  position: fixed;
+  top: 5rem;
+  right: 1.5rem;
+  background: #111827;
+  color: #f9fafb;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.45);
+  z-index: 50;
+}
+
+.app-footer {
+  padding: 0.5rem 2rem 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #6b7280;
 }
