@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+  namespace: health-tracking
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: vuthanhdat04/health-tracking-images:client
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            # Nếu dùng Vite: VITE_API_BASE_URL build từ trước, còn nếu dùng nginx proxy thì bỏ phần env này
+            - name: VITE_API_URL
+              value: "http://192.168.49.2:30081/api"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client
+  namespace: health-tracking
+spec:
+  selector:
+    app: client
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: health-tracking
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: vuthanhdat04/health-tracking-images:user-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4001        # đúng với app.listen(...)
+          env:
+            - name: PORT
+              value: "4001"
+            # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
+            - name: DB_URI
+              value: "mongodb+srv://n22dccn063_db_user:Quang98912004@cluster0.mqqf8x4.mongodb.net/health-tracker?appName=Cluster0"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: health-tracking
+spec:
+  selector:
+    app: user-service
+  ports:
+    - port: 4001
+      targetPort: 4001
+  type: ClusterIP
