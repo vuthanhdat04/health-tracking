@@ -12,7 +12,12 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", service: "api-gateway" });
+  res.json({
+    status: "ok",
+    service: "api-gateway",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // Tất cả API đều đi qua /api

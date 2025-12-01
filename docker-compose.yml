@@ -1,12 +1,87 @@
-networks:
-  health-network:
-    driver: bridge
+version: "3.9"
 
 services:
+  # ---------------- RABBITMQ (MESSAGE BROKER) ----------------
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # AMQP cho service connect
+      - "15672:15672"  # Web UI quản lý RabbitMQ
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - health-network
+
+  # ---------------- USER SERVICE ----------------
+  user-service:
+    build: ./services/user-service
+    container_name: user-service
+    ports:
+      - "4001:4001"
+    environment:
+      - PORT=4001
+      - DB_URI=${DB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - health-network
+
+  # ---------------- ACTIVITY SERVICE ----------------
+  activity-service:
+    build: ./services/activity-service
+    container_name: activity-service
+    ports:
+      - "4002:4002"
+    environment:
+      - PORT=4002
+      - DB_URI=${DB_URI}
+    networks:
+      - health-network
+
+  # ---------------- HEALTH METRICS SERVICE ----------------
+  health-metrics-service:
+    build: ./services/health-metrics-service
+    container_name: health-metrics-service
+    ports:
+      - "4003:4003"
+    environment:
+      - PORT=4003
+      - DB_URI=${DB_URI}
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      - rabbitmq
+    networks:
+      - health-network
+
+  # ---------------- PROGRESS SERVICE ----------------
+  progress-service:
+    build: ./services/progress-service
+    container_name: progress-service
+    ports:
+      - "4004:4004"
+    environment:
+      - PORT=4004
+      - DB_URI=${DB_URI}
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      - rabbitmq
+    networks:
+      - health-network
+
+  # ---------------- API GATEWAY ----------------
   api-gateway:
     build: ./api-gateway
+    container_name: api-gateway
     ports:
       - "8080:8080"
+    environment:
+      - PORT=8080
+      - JWT_SECRET=${JWT_SECRET}
+      - USER_SERVICE_URL=http://user-service:4001/api/users
+      - ACTIVITY_SERVICE_URL=http://activity-service:4002/api/activities
+      - METRIC_SERVICE_URL=http://health-metrics-service:4003/api/metrics
+      - PROGRESS_SERVICE_URL=http://progress-service:4004/api/progress
     depends_on:
       - user-service
       - activity-service
@@ -15,38 +90,20 @@ services:
     networks:
       - health-network
 
-  user-service:
-    build: ./services/user-service
-    ports:
-      - "4001:4001"
-    networks:
-      - health-network
-
-  activity-service:
-    build: ./services/activity-service
-    ports:
-      - "4002:4002"
-    networks:
-      - health-network
-
-  health-metrics-service:
-    build: ./services/health-metrics-service
-    ports:
-      - "4003:4003"
-    networks:
-      - health-network
-
-  progress-service:
-    build: ./services/progress-service
-    ports:
-      - "4004:4004"
-    networks:
-      - health-network
+  # ---------------- CLIENT (REACT) ----------------
   client:
     build: ./client
+    container_name: health-tracking-client
     ports:
-      - "5173:80"
-    networks:
-      - health-network
+      - "5173:80"   # vì trong Dockerfile client dùng Vite dev server port 5173
+    environment:
+      - VITE_API_URL=http://localhost:8080/api
     depends_on:
       - api-gateway
+    networks:
+      - health-network
+
+# ---------------- NETWORK ----------------
+networks:
+  health-network:
+    driver: bridge

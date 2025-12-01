@@ -16,7 +16,12 @@ app.use(morgan("dev"));
 app.use("/api/metrics", metricRoutes);
 
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", service: "health-metrics-service" });
+  res.json({
+    status: "ok",
+    service: "health-metrics-service",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
 
 const start = async () => {

@@ -15,8 +15,14 @@ app.use(morgan("dev"));
 
 app.use("/api/users", userRoutes);
 
+
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", service: "user-service" });
+  res.json({
+    status: "ok",
+    service: "user-service",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
 
 const start = async () => {

@@ -19,7 +19,12 @@ app.use("/api/activities", activityRoutes);
 
 // endpoint kiểm tra service sống
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", service: "activity-service" });
+  res.json({
+    status: "ok",
+    service: "activity-service",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // ----- start server -----
