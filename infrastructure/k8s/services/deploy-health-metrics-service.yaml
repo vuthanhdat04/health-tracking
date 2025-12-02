@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-metrics-service
+  namespace: health-tracking
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: health-metrics-service
+  template:
+    metadata:
+      labels:
+        app: health-metrics-service
+    spec:
+      containers:
+      - name: health-metrics-service
+        image: acrhealth.azurecr.io/health-metrics-service:IMAGE_TAG
+        ports:
+        - containerPort: 4003

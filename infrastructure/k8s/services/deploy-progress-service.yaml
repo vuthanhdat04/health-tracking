@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: progress-service
+  namespace: health-tracking
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: progress-service
+  template:
+    metadata:
+      labels:
+        app: progress-service
+    spec:
+      containers:
+      - name: progress-service
+        image: acrhealth.azurecr.io/progress-service:IMAGE_TAG
+        ports:
+        - containerPort: 4004
