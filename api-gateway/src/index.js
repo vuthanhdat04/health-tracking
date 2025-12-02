@@ -18,6 +18,6 @@ app.get("/health", (req, res) => {
 // Tất cả API đều đi qua /api
 app.use("/api", apiRoutes);
 
-app.listen(env.port, () => {
+app.listen(env.port, "0.0.0.0", () => {
   console.log(`[api-gateway] running on port ${env.port}`);
 });
