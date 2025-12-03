@@ -3,29 +3,31 @@
 # ============================
 FROM node:20-alpine AS builder
 
+# Nhận ENV từ Jenkins
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 WORKDIR /app
 
-# Copy file cấu hình trước để cache tốt hơn
+# Copy file config trước để tận dụng cache
 COPY package*.json ./
 
-# Cài dependencies
 RUN npm install
 
-# Copy toàn bộ code vào container
 COPY . .
 
-# Build Vite (ra thư mục dist)
+# Build Vite
 RUN npm run build
 
 # ============================
-# 2) RUN STAGE (Nginx phục vụ file tĩnh)
+# 2) RUN STAGE
 # ============================
 FROM nginx:stable-alpine
 
-# Copy file build từ stage 1
+# Copy file build ra Nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy config Nginx tối ưu cho SPA
+# Copy file config Nginx (nếu có SPA routing)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
