@@ -18,3 +18,19 @@ spec:
         image: acrhealth.azurecr.io/activity-service:IMAGE_TAG
         ports:
         - containerPort: 4002
+        env:
+        - name: DB_URI
+          valueFrom:
+            secretKeyRef:
+              name: health-env-secret
+              key: ACTIVITY_DB_URI
+        - name: NODE_ENV
+          valueFrom:
+            secretKeyRef:
+              name: health-env-secret
+              key: ACTIVITY_NODE_ENV
+        - name: PORT
+          valueFrom:
+            secretKeyRef:
+              name: health-env-secret
+              key: ACTIVITY_PORT
