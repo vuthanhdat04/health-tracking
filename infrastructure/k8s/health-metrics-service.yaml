@@ -1,40 +1,40 @@
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: health-metrics-service
-#   namespace: health-tracking
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: health-metrics-service
-#   template:
-#     metadata:
-#       labels:
-#         app: health-metrics-service
-#     spec:
-#       containers:
-#         - name: health-metrics-service
-#           image: vuthanhdat04/health-tracking-images:health-metrics-service
-#           imagePullPolicy: Always
-#           ports:
-#             - containerPort: 4003        # đúng với app.listen(...)
-#           env:
-#             - name: PORT
-#               value: "4003"
-#             # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
-#             - name: DB_URI
-#               value: "mongodb+srv://n22dccn063_db_user:Quang98912004@cluster0.mqqf8x4.mongodb.net/health-tracker?appName=Cluster0"
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: health-metrics-service
-#   namespace: health-tracking
-# spec:
-#   selector:
-#     app: health-metrics-service
-#   ports:
-#     - port: 4003
-#       targetPort: 4003
-#   type: ClusterIP
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-metrics-service
+  namespace: health-tracking
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: health-metrics-service
+  template:
+    metadata:
+      labels:
+        app: health-metrics-service
+    spec:
+      containers:
+        - name: health-metrics-service
+          image: acrhealth.azurecr.io/health-metrics-service:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4003        # đúng với app.listen(...)
+          env:
+            - name: PORT
+              value: "4003"
+            # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
+            - name: DB_URI
+              value: "mongodb+srv://n22dccn063_db_user:Quang98912004@cluster0.mqqf8x4.mongodb.net/health-tracker?appName=Cluster0"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: health-metrics-service
+  namespace: health-tracking
+spec:
+  selector:
+    app: health-metrics-service
+  ports:
+    - port: 4003
+      targetPort: 4003
+  type: ClusterIP
