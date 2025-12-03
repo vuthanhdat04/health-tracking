@@ -1,35 +1,35 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: client
-  namespace: health-tracking
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: client
-  template:
-    metadata:
-      labels:
-        app: client
-    spec:
-      containers:
-        - name: client
-          image: vuthanhdat04/health-tracking-images:client-cloud-v1-aks-env
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 80
-          # Không cần env VITE_API_URL vì Vite build đã cố định
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: client
-  namespace: health-tracking
-spec:
-  selector:
-    app: client
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: 80
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: client
+#   namespace: health-tracking
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: client
+#   template:
+#     metadata:
+#       labels:
+#         app: client
+#     spec:
+#       containers:
+#         - name: client
+#           image: vuthanhdat04/health-tracking-images:client-cloud-v1-aks-env
+#           imagePullPolicy: Always
+#           ports:
+#             - containerPort: 80
+#           # Không cần env VITE_API_URL vì Vite build đã cố định
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: client
+#   namespace: health-tracking
+# spec:
+#   selector:
+#     app: client
+#   type: ClusterIP
+#   ports:
+#     - port: 80
+#       targetPort: 80

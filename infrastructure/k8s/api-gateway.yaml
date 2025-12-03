@@ -1,48 +1,48 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: api-gateway
-  namespace: health-tracking
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: api-gateway
-  template:
-    metadata:
-      labels:
-        app: api-gateway
-    spec:
-      containers:
-        - name: api-gateway
-          image: vuthanhdat04/health-tracking-images:api-gateway
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
-          env:
-            - name: PORT
-              value: "8080"
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: api-gateway
+#   namespace: health-tracking
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: api-gateway
+#   template:
+#     metadata:
+#       labels:
+#         app: api-gateway
+#     spec:
+#       containers:
+#         - name: api-gateway
+#           image: vuthanhdat04/health-tracking-images:api-gateway
+#           imagePullPolicy: IfNotPresent
+#           ports:
+#             - containerPort: 8080
+#           env:
+#             - name: PORT
+#               value: "8080"
 
-            # ENV cho backend service
-            - name: USER_SERVICE_URL
-              value: "http://user-service.health-tracking.svc.cluster.local:4001/api/users"
-            - name: ACTIVITY_SERVICE_URL
-              value: "http://activity-service.health-tracking.svc.cluster.local:4002/api/activities"
-            - name: METRIC_SERVICE_URL
-              value: "http://health-metrics-service.health-tracking.svc.cluster.local:4003/api/metrics"
-            - name: PROGRESS_SERVICE_URL
-              value: "http://progress-service.health-tracking.svc.cluster.local:4004/api/progress"
+#             # ENV cho backend service
+#             - name: USER_SERVICE_URL
+#               value: "http://user-service.health-tracking.svc.cluster.local:4001/api/users"
+#             - name: ACTIVITY_SERVICE_URL
+#               value: "http://activity-service.health-tracking.svc.cluster.local:4002/api/activities"
+#             - name: METRIC_SERVICE_URL
+#               value: "http://health-metrics-service.health-tracking.svc.cluster.local:4003/api/metrics"
+#             - name: PROGRESS_SERVICE_URL
+#               value: "http://progress-service.health-tracking.svc.cluster.local:4004/api/progress"
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: api-gateway
-  namespace: health-tracking
-spec:
-  selector:
-    app: api-gateway
-  type: ClusterIP
-  ports:
-    - port: 8080
-      targetPort: 8080
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: api-gateway
+#   namespace: health-tracking
+# spec:
+#   selector:
+#     app: api-gateway
+#   type: ClusterIP
+#   ports:
+#     - port: 8080
+#       targetPort: 8080
