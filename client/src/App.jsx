@@ -685,7 +685,7 @@ function App() {
       <footer className="app-footer">
         <small>
           Đồ án Điện toán đám mây – Health Tracking (User, Activity, Health
-          Metrics microservices + API Gateway + MongoDB Atlas) (đã jenkins 3)
+          Metrics microservices + API Gateway + MongoDB Atlas) (đã jenkins 4)
         </small>
       </footer>
     </div>
