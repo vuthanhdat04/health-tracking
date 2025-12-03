@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: user-service
-        image: acrhealth.azurecr.io/user-service:__IMAGE_TAG__
+        image: acrhealth.azurecr.io/user-service:${IMAGE_TAG}
         ports:
         - containerPort: 4001
         env:

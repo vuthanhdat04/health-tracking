@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: activity-service
-        image: acrhealth.azurecr.io/activity-service:__IMAGE_TAG__
+        image: acrhealth.azurecr.io/activity-service:${IMAGE_TAG}
         ports:
         - containerPort: 4002
         env:

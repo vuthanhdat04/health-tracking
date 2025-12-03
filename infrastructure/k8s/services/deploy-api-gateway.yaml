@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: acrhealth.azurecr.io/api-gateway:__IMAGE_TAG__
+        image: acrhealth.azurecr.io/api-gateway:${IMAGE_TAG}
         ports:
         - containerPort: 8080
         env:

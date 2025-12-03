@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: health-metrics-service
-        image: acrhealth.azurecr.io/health-metrics-service:__IMAGE_TAG__
+        image: acrhealth.azurecr.io/health-metrics-service:${IMAGE_TAG}
         ports:
         - containerPort: 4003
         env:
