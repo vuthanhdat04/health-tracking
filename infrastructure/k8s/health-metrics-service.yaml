@@ -24,7 +24,10 @@ spec:
               value: "4003"
             # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
             - name: DB_URI
-              value: "mongodb+srv://n22dccn063_db_user:Quang98912004@cluster0.mqqf8x4.mongodb.net/health-tracker?appName=Cluster0"
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret    # Secret tạo ở bước trước
+                  key: DB_URI
             - name: RABBITMQ_URL  # Tên biến này phải khớp với code của bạn
               valueFrom:
                 secretKeyRef:

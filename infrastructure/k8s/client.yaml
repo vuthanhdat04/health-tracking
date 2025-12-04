@@ -19,7 +19,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-          # Không cần env VITE_API_URL vì Vite build đã cố định
+          # Không cần env VITE_API_URL vì có trên credentials của Jenkins
 ---
 apiVersion: v1
 kind: Service
