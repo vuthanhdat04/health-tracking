@@ -7,6 +7,8 @@ const morgan = require("morgan");
 const env = require("./config/env");
 const metricRoutes = require("./routes/metric.routes");
 
+require("./utils/rabbitmq");
+
 const app = express();
 
 app.use(cors());
@@ -19,9 +21,9 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok", service: "health-metrics-service" });
 });
 
+
 const start = async () => {
   try {
-    console.log("[health-metrics-service] Connecting to DB:", env.dbUri);
     await mongoose.connect(env.dbUri, {
       serverSelectionTimeoutMS: 5000,
     });
