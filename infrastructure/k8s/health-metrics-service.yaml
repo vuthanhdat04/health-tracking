@@ -25,6 +25,11 @@ spec:
             # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
             - name: DB_URI
               value: "mongodb+srv://n22dccn063_db_user:Quang98912004@cluster0.mqqf8x4.mongodb.net/health-tracker?appName=Cluster0"
+            - name: RABBITMQ_URL  # Tên biến này phải khớp với code của bạn
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-config        # Tên secret tạo ở Bước 2
+                  key: RABBITMQ_CONNECTION_STRING
 ---
 apiVersion: v1
 kind: Service
