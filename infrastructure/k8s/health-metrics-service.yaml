@@ -25,6 +25,9 @@ spec:
             # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
             - name: DB_URI
               value: "mongodb+srv://n22dccn063_db_user:Quang98912004@cluster0.mqqf8x4.mongodb.net/health-tracker?appName=Cluster0"
+            - name: RABBITMQ_URL
+              value: amqps://yvqnuvac:dwRtrRr4bO5CL91qitakhNUtlqmh3HQV@duck.lmq.cloudamqp.com/yvqnuvac
+
 ---
 apiVersion: v1
 kind: Service
