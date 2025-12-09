@@ -109,16 +109,3 @@ kubectl create secret generic backend-secrets \
         ├── service.yaml
         └── ingress.yaml
 ```
-
-## 📝 Hướng dẫn Developer (Dev Workflow)
-### Phát triển tính năng: Tạo nhánh feature từ dev.
-
-### Deploy Staging/Prod: Merge code vào nhánh cicd.
-
-### Kiểm tra Deploy:
-
-Xem trạng thái Build trên Jenkins Dashboard.
-
-Nếu thành công, Pods trên AKS sẽ tự động Restart.
-
-Kiểm tra phiên bản mới bằng cách xem Log hoặc Header API.
