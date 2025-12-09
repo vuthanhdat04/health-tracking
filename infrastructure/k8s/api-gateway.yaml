@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: acrhealth.azurecr.io/api-gateway:${TAG}
+          image: acrdemohealth.azurecr.io/api-gateway:${TAG}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

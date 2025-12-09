@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: health-metrics-service
-          image: acrhealth.azurecr.io/health-metrics-service:${TAG}
+          image: acrdemohealth.azurecr.io/health-metrics-service:${TAG}
           imagePullPolicy: Always
           ports:
             - containerPort: 4003        # đúng với app.listen(...)

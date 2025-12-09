@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: progress-service
-          image: acrhealth.azurecr.io/progress-service:${TAG}
+          image: acrdemohealth.azurecr.io/progress-service:${TAG}
           imagePullPolicy: Always
           ports:
             - containerPort: 4004        # đúng với app.listen(...)

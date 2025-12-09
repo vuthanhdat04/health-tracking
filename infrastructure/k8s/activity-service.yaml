@@ -16,7 +16,7 @@ spec:
       containers:
         - name: activity-service
           # Lưu ý: Thay ${TAG} bằng version cụ thể hoặc 'latest' khi test thủ công
-          image: acrhealth.azurecr.io/activity-service:${TAG}
+          image: acrdemohealth.azurecr.io/activity-service:${TAG}
           imagePullPolicy: Always
           ports:
             - containerPort: 4002
