@@ -97,7 +97,6 @@ kubectl create secret generic backend-secrets \
 ## 📂 Cấu trúc Repository
 ```
 .
-├── Jenkinsfile                  # Logic CI/CD chính
 ├── client/                      # Source code Frontend
 ├── api-gateway/                 # Root Service
 ├── services/                    # Các Microservices con
