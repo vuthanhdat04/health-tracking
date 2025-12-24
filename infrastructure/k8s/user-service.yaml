@@ -18,15 +18,14 @@ spec:
           image: acrhealth.azurecr.io/user-service:${TAG}
           imagePullPolicy: Always
           ports:
-            - containerPort: 4001        # đúng với app.listen(...)
+            - containerPort: 4001      
           env:
             - name: PORT
               value: "4001"
-            # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
             - name: DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret    # Secret tạo ở bước trước
+                  name: mongo-secret   
                   key: DB_URI
 ---
 apiVersion: v1

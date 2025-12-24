@@ -23,16 +23,11 @@ spec:
           env:
             - name: PORT
               value: "4002"
-            
-            # --- CẤU HÌNH DATABASE (Đã sửa để dùng Secret) ---
-            # Bạn nên dùng cách này thay vì hardcode password
             - name: DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret    # Secret tạo ở bước trước
+                  name: mongo-secret 
                   key: DB_URI
-            # -------------------------------------------------
-
 ---
 apiVersion: v1
 kind: Service

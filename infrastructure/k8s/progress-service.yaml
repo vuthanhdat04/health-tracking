@@ -18,20 +18,19 @@ spec:
           image: acrhealth.azurecr.io/progress-service:${TAG}
           imagePullPolicy: Always
           ports:
-            - containerPort: 4004        # đúng với app.listen(...)
+            - containerPort: 4004       
           env:
             - name: PORT
               value: "4004"
-            # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
             - name: DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret    # Secret tạo ở bước trước
+                  name: mongo-secret   
                   key: DB_URI
-            - name: RABBITMQ_URL  # Tên biến này phải khớp với code của bạn
+            - name: RABBITMQ_URL 
               valueFrom:
                 secretKeyRef:
-                  name: rabbitmq-config        # Tên secret tạo ở Bước 2
+                  name: rabbitmq-config        
                   key: RABBITMQ_CONNECTION_STRING
 ---
 apiVersion: v1
