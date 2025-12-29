@@ -2,9 +2,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://api-gateway:8080/api",
+  // Sửa fallback thành "/api"
+  baseURL: import.meta.env.VITE_API_URL || "/api",
 });
-
 // Tự động gắn token nếu có trong localStorage
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -15,3 +15,6 @@ api.interceptors.request.use((config) => {
 });
 
 export default api;
+
+
+

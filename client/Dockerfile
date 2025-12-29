@@ -3,9 +3,6 @@
 # ============================
 FROM node:20-alpine AS builder
 
-# Nhận ENV từ Jenkins
-ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL
 
 WORKDIR /app
 
