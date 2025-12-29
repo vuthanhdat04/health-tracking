@@ -15,8 +15,7 @@ spec:
     spec:
       containers:
         - name: activity-service
-          # Lưu ý: Thay ${TAG} bằng version cụ thể hoặc 'latest' khi test thủ công
-          image: acrhealth.azurecr.io/activity-service:${TAG}
+          image: acrhealth.azurecr.io/activity-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 4002
@@ -27,7 +26,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mongo-secret 
-                  key: DB_URI
+                  key: DB_URI_ACTIVITY
 ---
 apiVersion: v1
 kind: Service

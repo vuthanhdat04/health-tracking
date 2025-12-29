@@ -15,11 +15,10 @@ spec:
     spec:
       containers:
         - name: client
-          image: acrhealth.azurecr.io/client:${TAG}
+          image: acrhealth.azurecr.io/client:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-          # Không cần env VITE_API_URL vì có trên credentials của Jenkins
 ---
 apiVersion: v1
 kind: Service

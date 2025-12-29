@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: health-metrics-service
-          image: acrhealth.azurecr.io/health-metrics-service:${TAG}
+          image: acrhealth.azurecr.io/health-metrics-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 4003        
@@ -25,12 +25,12 @@ spec:
             - name: DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret    
-                  key: DB_URI
+                  name: mongo-secret
+                  key: DB_URI_HEALTH_METRICS
             - name: RABBITMQ_URL  
               valueFrom:
                 secretKeyRef:
-                  name: rabbitmq-config        
+                  name: rabbitmq-secret
                   key: RABBITMQ_CONNECTION_STRING
 ---
 apiVersion: v1
