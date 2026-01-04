@@ -18,7 +18,8 @@ spec:
           image: acrhealth.azurecr.io/health-metrics-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 4003        
+            - containerPort: 4003       
+              name: http-web
           env:
             - name: PORT
               value: "4003"
@@ -38,10 +39,14 @@ kind: Service
 metadata:
   name: health-metrics-service
   namespace: health-tracking
+  labels:
+    app: health-metrics-service
+    release: monitoring-stack
 spec:
   selector:
     app: health-metrics-service
   ports:
-    - port: 4003
+    - name: http-web  
+      port: 4003
       targetPort: 4003
   type: ClusterIP

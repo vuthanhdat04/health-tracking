@@ -15,6 +15,20 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
+const promBundle = require("express-prom-bundle");
+
+const metricsMiddleware = promBundle({
+  includeMethod: true, // Đo method GET/POST...
+  includePath: true,   // Đo đường dẫn API
+  // QUAN TRỌNG: Đổi đường dẫn metrics sang tên khác để không trùng với service của bạn
+  metricsPath: '/actuator/prometheus', 
+  customLabels: { app: 'health-metrics-service' }, // Sửa tên này thành 'activity-service', 'api-gateway' tùy service
+  promClient: {
+    collectDefaultMetrics: {}
+  }
+});
+app.use(metricsMiddleware);
+
 app.use("/api/metrics", metricRoutes);
 
 app.get("/health", (req, res) => {

@@ -19,6 +19,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 4002
+              name: http-web
           env:
             - name: PORT
               value: "4002"
@@ -33,10 +34,14 @@ kind: Service
 metadata:
   name: activity-service
   namespace: health-tracking
+  labels:
+    app: activity-service
+    release: monitoring-stack
 spec:
   selector:
     app: activity-service
   ports:
-    - port: 4002
+    - name: http-web
+      port: 4002
       targetPort: 4002
   type: ClusterIP

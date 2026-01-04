@@ -15,6 +15,20 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
+const promBundle = require("express-prom-bundle");
+
+const metricsMiddleware = promBundle({
+  includeMethod: true, // so sánh method GET/POST,...
+  includePath: true,   
+  metricsPath: '/actuator/prometheus', 
+  customLabels: { app: 'progress-service' }, 
+  promClient: {
+    collectDefaultMetrics: {}
+  }
+});
+
+app.use(metricsMiddleware);
+
 app.use("/api/progress", progressRoutes);
 
 app.get("/health", (req, res) => {

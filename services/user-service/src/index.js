@@ -8,10 +8,28 @@ const env = require("./config/env");
 const userRoutes = require("./routes/user.route");
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+
+
+// --- BẮT ĐẦU CẤU HÌNH MONITORING ---
+const promBundle = require("express-prom-bundle");
+
+const metricsMiddleware = promBundle({
+  includeMethod: true, // Đo method GET/POST...
+  includePath: true,   // Đo đường dẫn API
+  // QUAN TRỌNG: Đổi đường dẫn metrics sang tên khác để không trùng với service của bạn
+  metricsPath: '/actuator/prometheus', 
+  customLabels: { app: 'user-service' }, // Sửa tên này thành 'activity-service', 'api-gateway' tùy service
+  promClient: {
+    collectDefaultMetrics: {}
+  }
+});
+
+app.use(metricsMiddleware);
+// --- KẾT THÚC CẤU HÌNH MONITORING ---
+
 
 app.use("/api/users", userRoutes);
 

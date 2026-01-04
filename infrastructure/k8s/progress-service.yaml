@@ -18,7 +18,8 @@ spec:
           image: acrhealth.azurecr.io/progress-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 4004       
+            - containerPort: 4004     
+              name: http-web
           env:
             - name: PORT
               value: "4004"
@@ -38,10 +39,14 @@ kind: Service
 metadata:
   name: progress-service
   namespace: health-tracking
+  labels:
+    app: progress-service
+    release: monitoring-stack
 spec:
   selector:
     app: progress-service
   ports:
-    - port: 4004
+    - name: http-web
+      port: 4004
       targetPort: 4004
   type: ClusterIP
