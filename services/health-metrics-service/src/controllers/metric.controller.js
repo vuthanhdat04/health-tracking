@@ -1,4 +1,6 @@
 // src/controllers/metric.controller.js
+const { publishMetricCreated } = require("../utils/rabbitmq");
+
 const metricService = require("../services/metric.service");
 const { successResponse, errorResponse } = require("../utils/response");
 
@@ -22,12 +24,22 @@ const createMetric = async (req, res) => {
       note,
     });
 
+    // 🔥🔥🔥 BẮT BUỘC PHẢI CÓ
+    await publishMetricCreated({
+      _id: metric._id,
+      userId: metric.userId,
+      date: metric.date,
+      bmi: metric.bmi,
+      heartRate: metric.heartRate,
+    });
+
     return successResponse(res, metric, "Tạo chỉ số sức khỏe thành công", 201);
   } catch (err) {
     console.error("createMetric error:", err);
     return errorResponse(res, "Không thể tạo chỉ số sức khỏe", 500);
   }
 };
+
 
 // GET /api/metrics?userId=...&limit=10
 const getMetrics = async (req, res) => {

@@ -377,41 +377,55 @@ function App() {
       </p>
 
       {weeklyProgress && (
-        <>
-          <h3 style={{ marginTop: "1.5rem" }}>Báo cáo 7 ngày gần nhất</h3>
-          <div className="metric-card">
-            <p>
-              <strong>
-                Từ{" "}
-                {new Date(weeklyProgress.start).toLocaleDateString("vi-VN")} đến{" "}
-                {new Date(weeklyProgress.end).toLocaleDateString("vi-VN")}
-              </strong>
-            </p>
-            <p>
-              Tổng số hoạt động:{" "}
-              <strong>{weeklyProgress.totalActivities}</strong>
-            </p>
+  <>
+    <h3 style={{ marginTop: "1.5rem" }}>Báo cáo sức khỏe 7 ngày</h3>
 
-            {weeklyProgress.daily && weeklyProgress.daily.length > 0 ? (
-              <ul className="list">
-                {weeklyProgress.daily.map((d) => (
-                  <li key={d.date} className="list-item">
-                    <div className="list-main">
-                      {d.date} – {d.totalDuration} phút,{" "}
-                      {d.totalDistance} km, {d.totalCalories} cal
-                    </div>
-                    <div className="list-sub">
-                      Số hoạt động: {d.count}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>Chưa có hoạt động nào trong 7 ngày gần nhất.</p>
-            )}
-          </div>
-        </>
+    <div className="metric-card">
+      <p>
+        <strong>
+          Từ{" "}
+          {new Date(weeklyProgress.start).toLocaleDateString("vi-VN")} đến{" "}
+          {new Date(weeklyProgress.end).toLocaleDateString("vi-VN")}
+        </strong>
+      </p>
+
+      <p>
+        Tổng số lần đo:{" "}
+        <strong>{weeklyProgress.totalMetrics}</strong>
+      </p>
+
+      {weeklyProgress.daily && weeklyProgress.daily.length > 0 ? (
+        <ul className="list">
+          {weeklyProgress.daily.map((d) => (
+            <li key={d.date} className="list-item">
+              <div className="list-main">
+                📅 {d.date} – Số lần đo:{" "}
+                <strong>{d.metricCount}</strong>
+              </div>
+
+              <div className="list-sub">
+                BMI:{" "}
+                <strong>
+                  {d.bmi !== undefined && d.bmi !== null ? d.bmi : "N/A"}
+                </strong>
+                {" | "}
+                Nhịp tim:{" "}
+                <strong>
+                  {d.heartRate !== undefined && d.heartRate !== null
+                    ? `${d.heartRate} bpm`
+                    : "N/A"}
+                </strong>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Chưa có dữ liệu sức khỏe trong 7 ngày gần nhất.</p>
       )}
+    </div>
+  </>
+)}
+
     </div>
   );
 

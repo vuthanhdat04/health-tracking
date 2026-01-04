@@ -2,45 +2,14 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getDailyProgress,
   getWeeklyProgress,
 } = require("../services/progress.service");
 
-// Lấy tiến độ trong 1 ngày
-router.get("/daily", async (req, res) => {
-  try {
-    const { userId, date } = req.query;
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        message: "Thiếu userId",
-      });
-    }
-
-    const progress = await getDailyProgress(
-      userId,
-      date ? new Date(date) : new Date()
-    );
-
-    return res.json({
-      success: true,
-      message: "Lấy tiến độ ngày thành công",
-      data: progress,
-    });
-  } catch (err) {
-    console.error("[progress-service] /daily error", err);
-    return res.status(500).json({
-      success: false,
-      message: "Lỗi khi lấy tiến độ ngày",
-      error: err.message,
-    });
-  }
-});
-
-// Báo cáo 7 ngày gần nhất
+// GET /api/progress/weekly?userId=123&endDate=2025-11-28
 router.get("/weekly", async (req, res) => {
   try {
-    const { userId } = req.query;
+    const { userId, endDate } = req.query;
+
     if (!userId) {
       return res.status(400).json({
         success: false,
@@ -48,7 +17,11 @@ router.get("/weekly", async (req, res) => {
       });
     }
 
-    const data = await getWeeklyProgress(userId);
+    const endDateStr = endDate
+      ? new Date(endDate).toISOString().slice(0, 10)
+      : new Date().toISOString().slice(0, 10);
+
+    const data = await getWeeklyProgress(userId, endDateStr);
 
     return res.json({
       success: true,
