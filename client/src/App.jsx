@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import api from "./api";
 import "./App.css";
 
+
 function App() {
   const [user, setUser] = useState(null); // { id, fullName, email, ... }
   const [token, setToken] = useState("");
@@ -10,6 +11,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [weeklyProgress, setWeeklyProgress] = useState(null);
+
+
 
 
   // ------- Auth form state -------
@@ -21,10 +24,12 @@ function App() {
     gender: "male",
   });
 
+
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
   });
+
 
   // ------- Activity form/list -------
   const [activityForm, setActivityForm] = useState({
@@ -35,6 +40,7 @@ function App() {
     note: "",
   });
   const [activities, setActivities] = useState([]);
+
 
   // ------- Metrics form/list -------
   const [metricForm, setMetricForm] = useState({
@@ -47,7 +53,9 @@ function App() {
   });
   const [latestMetric, setLatestMetric] = useState(null);
 
+
   // ----------------- Helpers -----------------
+
 
   // load token + user từ localStorage khi mở trang
   useEffect(() => {
@@ -60,12 +68,14 @@ function App() {
     }
   }, []);
 
+
   const showMessage = (text, timeout = 3000) => {
     setMessage(text);
     if (text) {
       setTimeout(() => setMessage(""), timeout);
     }
   };
+
 
   const handleLogout = () => {
     setUser(null);
@@ -76,7 +86,9 @@ function App() {
     showMessage("Đã đăng xuất");
   };
 
+
   // ----------------- Auth -----------------
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -100,6 +112,7 @@ function App() {
       setLoading(false);
     }
   };
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -126,7 +139,9 @@ function App() {
     }
   };
 
+
   // ----------------- Activity -----------------
+
 
   const fetchActivities = async () => {
     if (!user) return;
@@ -143,6 +158,7 @@ function App() {
       setLoading(false);
     }
   };
+
 
   const fetchWeeklyProgress = async () => {
   if (!user) return;
@@ -162,6 +178,8 @@ function App() {
     setLoading(false);
   }
 };
+
+
 
 
   const handleCreateActivity = async (e) => {
@@ -202,7 +220,9 @@ function App() {
     }
   };
 
+
   // ----------------- Metrics -----------------
+
 
   const fetchLatestMetric = async () => {
     if (!user) return;
@@ -224,6 +244,7 @@ function App() {
       setLoading(false);
     }
   };
+
 
   const handleCreateMetric = async (e) => {
     e.preventDefault();
@@ -265,7 +286,9 @@ function App() {
     }
   };
 
+
   // ----------------- UI components -----------------
+
 
   const renderAuthSection = () => (
     <div className="card auth-card">
@@ -323,6 +346,7 @@ function App() {
         </button>
       </form>
 
+
       <h2 style={{ marginTop: "2rem" }}>Đăng nhập</h2>
       <form onSubmit={handleLogin} className="form">
         <input
@@ -350,6 +374,7 @@ function App() {
     </div>
   );
 
+
   const renderOverview = () => {
     if (!user) {
       return (
@@ -358,6 +383,7 @@ function App() {
         </div>
       );
     }
+
 
       return (
     <div className="card">
@@ -368,6 +394,7 @@ function App() {
         </button>
       </div>
 
+
       <p>Email: {user.email}</p>
       <p>Giới tính: {user.gender}</p>
       <p>Tuổi: {user.age}</p>
@@ -376,46 +403,68 @@ function App() {
         bên trên.
       </p>
 
-      {weeklyProgress && (
-        <>
-          <h3 style={{ marginTop: "1.5rem" }}>Báo cáo 7 ngày gần nhất</h3>
-          <div className="metric-card">
-            <p>
-              <strong>
-                Từ{" "}
-                {new Date(weeklyProgress.start).toLocaleDateString("vi-VN")} đến{" "}
-                {new Date(weeklyProgress.end).toLocaleDateString("vi-VN")}
-              </strong>
-            </p>
-            <p>
-              Tổng số hoạt động:{" "}
-              <strong>{weeklyProgress.totalActivities}</strong>
-            </p>
 
-            {weeklyProgress.daily && weeklyProgress.daily.length > 0 ? (
-              <ul className="list">
-                {weeklyProgress.daily.map((d) => (
-                  <li key={d.date} className="list-item">
-                    <div className="list-main">
-                      {d.date} – {d.totalDuration} phút,{" "}
-                      {d.totalDistance} km, {d.totalCalories} cal
-                    </div>
-                    <div className="list-sub">
-                      Số hoạt động: {d.count}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>Chưa có hoạt động nào trong 7 ngày gần nhất.</p>
-            )}
-          </div>
-        </>
+      {weeklyProgress && (
+  <>
+    <h3 style={{ marginTop: "1.5rem" }}>Báo cáo sức khỏe 7 ngày</h3>
+
+
+    <div className="metric-card">
+      <p>
+        <strong>
+          Từ{" "}
+          {new Date(weeklyProgress.start).toLocaleDateString("vi-VN")} đến{" "}
+          {new Date(weeklyProgress.end).toLocaleDateString("vi-VN")}
+        </strong>
+      </p>
+
+
+      <p>
+        Tổng số lần đo:{" "}
+        <strong>{weeklyProgress.totalMetrics}</strong>
+      </p>
+
+
+      {weeklyProgress.daily && weeklyProgress.daily.length > 0 ? (
+        <ul className="list">
+          {weeklyProgress.daily.map((d) => (
+            <li key={d.date} className="list-item">
+              <div className="list-main">
+                📅 {d.date} – Số lần đo:{" "}
+                <strong>{d.metricCount}</strong>
+              </div>
+
+
+              <div className="list-sub">
+                BMI:{" "}
+                <strong>
+                  {d.bmi !== undefined && d.bmi !== null ? d.bmi : "N/A"}
+                </strong>
+                {" | "}
+                Nhịp tim:{" "}
+                <strong>
+                  {d.heartRate !== undefined && d.heartRate !== null
+                    ? `${d.heartRate} bpm`
+                    : "N/A"}
+                </strong>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Chưa có dữ liệu sức khỏe trong 7 ngày gần nhất.</p>
       )}
+    </div>
+  </>
+)}
+
+
     </div>
   );
 
+
   };
+
 
   const renderActivitySection = () => {
     if (!user) {
@@ -426,6 +475,7 @@ function App() {
       );
     }
 
+
     return (
       <div className="card">
         <div className="card-header-row">
@@ -434,6 +484,7 @@ function App() {
             Tải danh sách
           </button>
         </div>
+
 
         <form onSubmit={handleCreateActivity} className="form">
           <input
@@ -487,6 +538,7 @@ function App() {
           </button>
         </form>
 
+
         <h3 style={{ marginTop: "1.5rem" }}>Hoạt động gần đây</h3>
         {activities.length === 0 ? (
           <p>Chưa có dữ liệu, hãy nhấn "Tải danh sách" hoặc thêm hoạt động mới.</p>
@@ -511,6 +563,7 @@ function App() {
     );
   };
 
+
   const renderMetricsSection = () => {
     if (!user) {
       return (
@@ -520,6 +573,7 @@ function App() {
       );
     }
 
+
     return (
       <div className="card">
         <div className="card-header-row">
@@ -528,6 +582,7 @@ function App() {
             Lấy chỉ số mới nhất
           </button>
         </div>
+
 
         <form onSubmit={handleCreateMetric} className="form">
           <div className="form-row">
@@ -589,6 +644,7 @@ function App() {
           </button>
         </form>
 
+
         <h3 style={{ marginTop: "1.5rem" }}>Chỉ số gần nhất</h3>
         {!latestMetric ? (
           <p>Chưa có dữ liệu, hãy nhấn "Lấy chỉ số mới nhất" hoặc thêm mới.</p>
@@ -626,7 +682,9 @@ function App() {
     );
   };
 
+
   // ----------------- Render tổng -----------------
+
 
   return (
     <div className="app-root">
@@ -637,7 +695,7 @@ function App() {
             <>
               <span className="user-name">{user.fullName}</span>
               <button className="secondary small" onClick={handleLogout}>
-                Đăng xuất (đã jenkins)
+                Đăng xuất
               </button>
             </>
           ) : (
@@ -645,6 +703,7 @@ function App() {
           )}
         </div>
       </header>
+
 
       <nav className="tab-nav">
         <button
@@ -673,8 +732,10 @@ function App() {
         </button>
       </nav>
 
+
       <main className="app-main">
         {message && <div className="toast">{message}</div>}
+
 
         {activeTab === "auth" && renderAuthSection()}
         {activeTab === "overview" && renderOverview()}
@@ -682,14 +743,16 @@ function App() {
         {activeTab === "metrics" && renderMetricsSection()}
       </main>
 
+
       <footer className="app-footer">
         <small>
           Đồ án Điện toán đám mây – Health Tracking (User, Activity, Health
-          Metrics microservices + API Gateway + MongoDB Atlas) (đã jenkins 4)
+          Metrics microservices + API Gateway + MongoDB Atlas)
         </small>
       </footer>
     </div>
   );
 }
+
 
 export default App;

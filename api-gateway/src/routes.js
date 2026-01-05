@@ -56,7 +56,6 @@ router.use("/activities", authMiddleware, createProxyRouter(env.activityServiceU
 
 router.use("/metrics", authMiddleware, createProxyRouter(env.metricServiceUrl));
 
-// nếu sau này bạn làm progress-service:
 router.use("/progress", authMiddleware, createProxyRouter(env.progressServiceUrl));
 
 module.exports = router;
