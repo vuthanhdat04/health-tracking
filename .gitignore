@@ -81,3 +81,14 @@ client/.vite/
 # =========================
 *.cache
 *.pid
+
+
+# Ignore folder cấu hình Monitor và Nginx (Infrastructure)
+infrastructure/k8s/monitor/
+infrastructure/k8s/nginx/
+
+# Ignore các file yaml cấu hình riêng lẻ không phải Service chính
+infrastructure/k8s/alert-config.yaml
+infrastructure/k8s/ingress.yaml
+infrastructure/k8s/monitor-client.yaml
+infrastructure/k8s/monitor-services.yaml
