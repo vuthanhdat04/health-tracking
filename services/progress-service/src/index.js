@@ -1,13 +1,11 @@
-// src/index.js
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
-const morgan = require("morgan");
-
+const mongoose = require("mongoose");
 const env = require("./config/env");
-const progressRoutes = require("./routes/progress.routes");
-
+const routes = require("./routes/progress.routes");
+const morgan = require("morgan");
 const { startMetricConsumer } = require("./utils/rabbitmq");
+const { handleIncomingMetricEvent } = require("./services/progress.service");
 
 const app = express();
 
@@ -29,45 +27,47 @@ const metricsMiddleware = promBundle({
 
 app.use(metricsMiddleware);
 
-app.use("/api/progress", progressRoutes);
-
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", service: "progress-service" });
+  res.json({
+    status: "ok",
+    service: "progress-service",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
 
-const handleMetricUpdate = async (data) => {
-  try {
-    console.log("[progress-service] 📩 Received event from RabbitMQ:", data);
-    
-    // --- CHỖ NÀY LÀ LOGIC CODE CỦA BẠN ---
-    // Ví dụ:
-    // 1. Tìm bản ghi Progress của user (data.userId)
-    // 2. Cộng dồn chỉ số (data.value) vào Progress
-    // 3. Lưu vào DB
-    // const { userId, type, value } = data;
-    // await ProgressModel.findOneAndUpdate(...)
-    
-    console.log("[progress-service] ✅ Processed metric update for User:", data.userId);
-  } catch (err) {
-    console.error("[progress-service] ❌ Error processing message:", err);
-    // Không cần throw lỗi ở đây để tránh crash consumer, chỉ log lại
-  }
-};
+app.use("/api/progress", routes);
 
-const start = async () => {
-  try {
-    await mongoose.connect(env.dbUri, { serverSelectionTimeoutMS: 5000 });
+mongoose
+  .connect(env.dbUri)
+  .then(() => {
     console.log("[progress-service] Connected to DB");
 
-    await startMetricConsumer(handleMetricUpdate);
-    
+    // ----- THÊM HÀM RETRY KẾT NỐI RABBITMQ -----
+    const startConsumerWithRetry = () => {
+      startMetricConsumer(handleIncomingMetricEvent)
+        .then(() => {
+          console.log(
+            "[progress-service] RabbitMQ consumer started successfully"
+          );
+        })
+        .catch((err) => {
+          console.error(
+            "[progress-service] RabbitMQ error, retry in 5s:",
+            err.message
+          );
+          setTimeout(startConsumerWithRetry, 5000);
+        });
+    };
+
+    startConsumerWithRetry();
+    // ------------------------------------------
+
     app.listen(env.port, () => {
       console.log(`[progress-service] running on port ${env.port}`);
     });
-  } catch (err) {
-    console.error("[progress-service] Failed to start", err);
+  })
+  .catch((err) => {
+    console.error("[progress-service] DB connection error", err);
     process.exit(1);
-  }
-};
-
-start();
+  });
