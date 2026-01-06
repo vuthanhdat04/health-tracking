@@ -695,7 +695,7 @@ function App() {
             <>
               <span className="user-name">{user.fullName}</span>
               <button className="secondary small" onClick={handleLogout}>
-                Đăng xuất
+                Đăng xuất (cliped jenkins)
               </button>
             </>
           ) : (
