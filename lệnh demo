@@ -1,0 +1,4 @@
+test gửi mail:
+
+  stress test: kubectl run stress-test --image=polinux/stress -- stress --cpu 2 --timeout 300
+  dọn dẹp test: kubectl delete pod stress-test
