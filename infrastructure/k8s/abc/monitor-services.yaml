@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: microservices-monitor
+  namespace: monitoring 
+  labels:
+    release: monitoring-stack # Label này báo hiệu cho Prometheus Operator biết để quản lý
+spec:
+  selector:
+    matchLabels:
+      release: monitoring-stack 
+  namespaceSelector:
+    matchNames:
+      - health-tracking 
+  endpoints:
+  - port: http-web
+    path: /actuator/prometheus 
+    interval: 15s # Tần suất lấy dữ liệu

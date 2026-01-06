@@ -1,0 +1,11 @@
+grafana:
+  assertNoLeakedSecrets: false # cho phép nhập mật khẩu trực tiếp trong file này
+  grafana.ini:
+    smtp:
+      enabled: true
+      host: smtp.gmail.com:587
+      user: "dat0168245@gmail.com"
+      password: "nman plfz sulh bpqq"  # mật khẩu ứng dụng (app password)
+      from_address: "dat0168245@gmail.com"
+      from_name: "Grafana AKS Alert"
+      startTLS_policy: MandatoryStartTLS
