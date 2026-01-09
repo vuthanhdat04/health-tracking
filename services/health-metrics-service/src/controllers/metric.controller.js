@@ -46,8 +46,6 @@ const createMetric = async (req, res) => {
 };
 
 
-
-
 // GET /api/metrics?userId=...&limit=10
 const getMetrics = async (req, res) => {
   try {

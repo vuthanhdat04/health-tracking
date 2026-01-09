@@ -2,3 +2,19 @@ test gửi mail:
 
   stress test: kubectl run stress-test --image=polinux/stress -- stress --cpu 2 --timeout 300
   dọn dẹp test: kubectl delete pod stress-test
+
+link web: vuthanhdat04.id.vn
+monitor: monitoring.vuthanhdat04.id.vn
+cicd: cicd.vuthanhdat04.in.vn
+
+cấu hình máy: 1 node là 2cpu 16gb ram, 1 cpu = 1000mcpu
+
+stress test hpa: kubectl run -i --tty load-generator --rm --image=busybox --restart=Never
+ --namespace=health-tracking -- /bin/sh -c "while true; do wget -q -O- http://user-service.health-tracking.svc.cluster.local:4001/health; done"
+
+xóa pod  test hpa: kubectl delete pod load-generator -n health-tracking --force --grace-period=0
+
+lấy mô tả hpa: kubectl describe hpa user-service-hpa -n health-tracking
+
+
+Cổng truy cập: Sau khi có IP, bạn sẽ truy cập qua địa chỉ: http://<EXTERNAL-IP>:8080.
