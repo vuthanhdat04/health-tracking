@@ -15,34 +15,58 @@ spec:
     spec:
       containers:
         - name: health-metrics-service
-          image: acrhealth.azurecr.io/health-metrics-service:${TAG}
+          image: acrhealth.azurecr.io/health-metrics-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 4003        # đúng với app.listen(...)
+            - containerPort: 4003       
+              name: http-web
           env:
             - name: PORT
               value: "4003"
-            # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
             - name: DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret    # Secret tạo ở bước trước
-                  key: DB_URI
-            - name: RABBITMQ_URL  # Tên biến này phải khớp với code của bạn
+                  name: mongo-secret
+                  key: DB_URI_HEALTH_METRICS
+            - name: RABBITMQ_URL  
               valueFrom:
                 secretKeyRef:
-                  name: rabbitmq-config        # Tên secret tạo ở Bước 2
+                  name: rabbitmq-secret
                   key: RABBITMQ_CONNECTION_STRING
+          livenessProbe:              # Kiểm tra xem Pod có còn sống không
+            httpGet:
+              path: /health           # Endpoint health check
+              port: 4003
+            initialDelaySeconds: 30   # Đợi 30s sau khi start mới check
+            periodSeconds: 10         # Check mỗi 10s
+          readinessProbe:             # Kiểm tra xem Pod đã sẵn sàng nhận traffic chưa
+            httpGet:
+              path: /health
+              port: 4003
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          # ---------------------------------------------------
+          resources:
+            requests:
+              cpu: "100m"     
+              memory: "128Mi" 
+            limits:
+              cpu: "300m"     
+              memory: "256Mi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: health-metrics-service
   namespace: health-tracking
+  labels:
+    app: health-metrics-service
+    release: monitoring-stack
 spec:
   selector:
     app: health-metrics-service
   ports:
-    - port: 4003
+    - name: http-web  
+      port: 4003
       targetPort: 4003
   type: ClusterIP

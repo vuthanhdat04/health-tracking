@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: user-service
   namespace: health-tracking
+  labels:
+    app: user-service
+    release: monitor-stack
 spec:
   replicas: 1
   selector:
@@ -15,29 +18,54 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: acrhealth.azurecr.io/user-service:${TAG}
+          image: acrhealth.azurecr.io/user-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 4001        # đúng với app.listen(...)
+            - containerPort: 4001      
+              name: http-web
           env:
             - name: PORT
               value: "4001"
-            # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
             - name: DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret    # Secret tạo ở bước trước
-                  key: DB_URI
+                  name: mongo-secret   
+                  key: DB_URI_USER
+          # ----------------------------------------------------
+          livenessProbe:              # Kiểm tra xem Pod có còn sống không
+            httpGet:
+              path: /health           # Endpoint health check
+              port: 4001
+            initialDelaySeconds: 30   # Đợi 30s sau khi start mới check
+            periodSeconds: 10         # Check mỗi 10s
+          readinessProbe:             # Kiểm tra xem Pod đã sẵn sàng nhận traffic chưa
+            httpGet:
+              path: /health
+              port: 4001
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          # ---------------------------------------------------
+          resources:
+            requests:
+              cpu: "100m"     
+              memory: "128Mi" 
+            limits:
+              cpu: "300m"     
+              memory: "256Mi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: user-service
   namespace: health-tracking
+  labels:                  
+    app: user-service
+    release: monitoring-stack
 spec:
   selector:
     app: user-service
   ports:
-    - port: 4001
+    - name: http-web
+      port: 4001
       targetPort: 4001
   type: ClusterIP

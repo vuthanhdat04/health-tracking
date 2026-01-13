@@ -15,34 +15,53 @@ spec:
     spec:
       containers:
         - name: activity-service
-          # Lưu ý: Thay ${TAG} bằng version cụ thể hoặc 'latest' khi test thủ công
-          image: acrhealth.azurecr.io/activity-service:${TAG}
+          image: acrhealth.azurecr.io/activity-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 4002
+              name: http-web
           env:
             - name: PORT
               value: "4002"
-            
-            # --- CẤU HÌNH DATABASE (Đã sửa để dùng Secret) ---
-            # Bạn nên dùng cách này thay vì hardcode password
             - name: DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret    # Secret tạo ở bước trước
-                  key: DB_URI
-            # -------------------------------------------------
-
+                  name: mongo-secret 
+                  key: DB_URI_ACTIVITY
+          livenessProbe:              # Kiểm tra xem Pod có còn sống không
+            httpGet:
+              path: /health           # Endpoint health check
+              port: 4002
+            initialDelaySeconds: 30   # Đợi 30s sau khi start mới check
+            periodSeconds: 10         # Check mỗi 10s
+          readinessProbe:             # Kiểm tra xem Pod đã sẵn sàng nhận traffic chưa
+            httpGet:
+              path: /health
+              port: 4002
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          # ---------------------------------------------------
+          resources:
+            requests:
+              cpu: "100m"     
+              memory: "128Mi" 
+            limits:
+              cpu: "300m"     
+              memory: "256Mi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: activity-service
   namespace: health-tracking
+  labels:
+    app: activity-service
+    release: monitoring-stack
 spec:
   selector:
     app: activity-service
   ports:
-    - port: 4002
+    - name: http-web
+      port: 4002
       targetPort: 4002
   type: ClusterIP

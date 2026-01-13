@@ -15,34 +15,58 @@ spec:
     spec:
       containers:
         - name: progress-service
-          image: acrhealth.azurecr.io/progress-service:${TAG}
+          image: acrhealth.azurecr.io/progress-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 4004        # đúng với app.listen(...)
+            - containerPort: 4004     
+              name: http-web
           env:
             - name: PORT
               value: "4004"
-            # ĐỔI TÊN BIẾN CHO KHỚP CODE (VD: DB_URI, MONGO_URI, ...)
             - name: DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret    # Secret tạo ở bước trước
-                  key: DB_URI
-            - name: RABBITMQ_URL  # Tên biến này phải khớp với code của bạn
+                  name: mongo-secret   
+                  key: DB_URI_PROGRESS
+            - name: RABBITMQ_URL 
               valueFrom:
                 secretKeyRef:
-                  name: rabbitmq-config        # Tên secret tạo ở Bước 2
+                  name: rabbitmq-secret        
                   key: RABBITMQ_CONNECTION_STRING
+          livenessProbe:              # Kiểm tra xem Pod có còn sống không
+            httpGet:
+              path: /health           # Endpoint health check
+              port: 4004
+            initialDelaySeconds: 30   # Đợi 30s sau khi start mới check
+            periodSeconds: 10         # Check mỗi 10s
+          readinessProbe:             # Kiểm tra xem Pod đã sẵn sàng nhận traffic chưa
+            httpGet:
+              path: /health
+              port: 4004
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          # ---------------------------------------------------
+          resources:
+            requests:
+              cpu: "100m"     
+              memory: "128Mi" 
+            limits:
+              cpu: "300m"     
+              memory: "256Mi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: progress-service
   namespace: health-tracking
+  labels:
+    app: progress-service
+    release: monitoring-stack
 spec:
   selector:
     app: progress-service
   ports:
-    - port: 4004
+    - name: http-web
+      port: 4004
       targetPort: 4004
   type: ClusterIP
